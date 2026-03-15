@@ -188,22 +188,6 @@ const MapView = () => {
         </div>
       )}
 
-      {/* Legend */}
-      <div className="absolute bottom-4 right-4 z-[1000] bg-card/95 backdrop-blur-sm border border-border rounded-md p-2.5 space-y-1.5">
-        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Legenda</p>
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-primary" />
-          <span className="text-[11px] text-muted-foreground">Normal</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-status-high-signal" />
-          <span className="text-[11px] text-muted-foreground">&gt;80% ocupada</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-status-los" />
-          <span className="text-[11px] text-muted-foreground">Com LOS</span>
-        </div>
-      </div>
 
       <CTODrawer
         cto={selectedCTO}

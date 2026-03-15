@@ -112,6 +112,31 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Legenda do Mapa */}
+        {!collapsed && (
+          <SidebarGroup className="mt-4">
+            <SidebarGroupLabel className="text-[11px] uppercase tracking-widest text-muted-foreground/70 font-medium px-2 mb-1">
+              Legenda
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <div className="px-2 space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-primary flex-shrink-0" />
+                  <span className="text-xs text-muted-foreground">Normal</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-status-high-signal flex-shrink-0" />
+                  <span className="text-xs text-muted-foreground">&gt;80% ocupada</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-status-los flex-shrink-0" />
+                  <span className="text-xs text-muted-foreground">Com LOS</span>
+                </div>
+              </div>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter className="p-3 border-t border-border">
