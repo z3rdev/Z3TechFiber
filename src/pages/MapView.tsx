@@ -131,9 +131,10 @@ const MapView = () => {
         {/* Routing */}
         {routeTarget && userLocation && (
           <RoutingControl
-            from={userLocation}
-            to={[routeTarget.lat, routeTarget.lng]}
-            onClear={handleClearRoute}
+            fromLat={userLocation[0]}
+            fromLng={userLocation[1]}
+            toLat={routeTarget.lat}
+            toLng={routeTarget.lng}
             onRouteFound={setRouteInfo}
           />
         )}
