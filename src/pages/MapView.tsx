@@ -108,46 +108,6 @@ function LocationFinder({ onLocationFound, follow }: { onLocationFound: (lat: nu
   return null;
 }
 
-// Applies 3D perspective tilt to the map when navigating (like Google Maps)
-function NavigationTilt({ active }: { active: boolean }) {
-  const map = useMap();
-
-  useEffect(() => {
-    const container = map.getContainer();
-    const wrapper = container.parentElement;
-    if (!wrapper) return;
-
-    if (active) {
-      wrapper.style.perspective = "1200px";
-      wrapper.style.perspectiveOrigin = "50% 100%";
-      container.style.transition = "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
-      container.style.transformOrigin = "50% 100%";
-      container.style.transform = "rotateX(35deg) scale(1.15)";
-      // Disable scroll interactions that fight with the tilt
-    } else {
-      container.style.transition = "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)";
-      container.style.transform = "rotateX(0deg) scale(1)";
-      setTimeout(() => {
-        wrapper.style.perspective = "";
-        wrapper.style.perspectiveOrigin = "";
-        container.style.transformOrigin = "";
-        container.style.transition = "";
-      }, 600);
-    }
-
-    return () => {
-      container.style.transform = "";
-      container.style.transition = "";
-      container.style.transformOrigin = "";
-      if (wrapper) {
-        wrapper.style.perspective = "";
-        wrapper.style.perspectiveOrigin = "";
-      }
-    };
-  }, [map, active]);
-
-  return null;
-}
 
 function FlyTo({ lat, lng }: { lat: number; lng: number }) {
   const map = useMap();
