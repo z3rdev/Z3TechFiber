@@ -80,6 +80,19 @@ const MapView = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [routeTarget, setRouteTarget] = useState<CTO | null>(null);
   const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
+  const [flyTarget, setFlyTarget] = useState<{ lat: number; lng: number } | null>(null);
+  const { selectedFromSearch, clearSelection } = useCTOSearch();
+
+  // React to search selection
+  useEffect(() => {
+    if (selectedFromSearch) {
+      setSelectedCTO(selectedFromSearch);
+      setDrawerOpen(true);
+      setFlyTarget({ lat: selectedFromSearch.lat, lng: selectedFromSearch.lng });
+      clearSelection();
+    }
+  }, [selectedFromSearch, clearSelection]);
+
   const handleLocationFound = useCallback((lat: number, lng: number) => {
     setUserLocation([lat, lng]);
   }, []);
