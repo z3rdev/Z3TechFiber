@@ -1,14 +1,25 @@
-import { useEffect, useState, useCallback } from "react";
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { MapContainer, TileLayer, Marker, Circle, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { mockCTOs, type CTO } from "@/data/mock-data";
 import { CTODrawer } from "@/components/CTODrawer";
 import { RoutingControl, type RouteInfo } from "@/components/RoutingControl";
 import { useCTOSearch } from "@/contexts/CTOSearchContext";
+import { useSettings } from "@/contexts/SettingsContext";
 import { Button } from "@/components/ui/button";
 import { X, MapPin, Clock, Route } from "lucide-react";
 import { toast } from "sonner";
+
+function getDistanceMeters(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371000;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -82,6 +93,15 @@ const MapView = () => {
   const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
   const [flyTarget, setFlyTarget] = useState<{ lat: number; lng: number } | null>(null);
   const { selectedFromSearch, clearSelection } = useCTOSearch();
+  const { performanceMode, performanceRadius } = useSettings();
+
+  // Filter CTOs based on performance mode
+  const visibleCTOs = useMemo(() => {
+    if (!performanceMode || !userLocation) return ctos;
+    return ctos.filter(
+      (cto) => getDistanceMeters(userLocation[0], userLocation[1], cto.lat, cto.lng) <= performanceRadius
+    );
+  }, [ctos, performanceMode, performanceRadius, userLocation]);
 
   // React to search selection
   useEffect(() => {
@@ -139,7 +159,23 @@ const MapView = () => {
         <LocationFinder onLocationFound={handleLocationFound} />
         {flyTarget && <FlyTo lat={flyTarget.lat} lng={flyTarget.lng} />}
         {userLocation && <Marker position={userLocation} icon={userIcon} />}
-        {ctos.map((cto) => {
+
+        {/* Performance mode radius circle */}
+        {performanceMode && userLocation && (
+          <Circle
+            center={userLocation}
+            radius={performanceRadius}
+            pathOptions={{
+              color: "#059669",
+              fillColor: "#059669",
+              fillOpacity: 0.06,
+              weight: 1.5,
+              dashArray: "6 4",
+            }}
+          />
+        )}
+
+        {visibleCTOs.map((cto) => {
           const hasLOS = cto.clients.some((c) => c.status === "los");
           return (
             <Marker
