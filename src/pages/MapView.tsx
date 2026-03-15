@@ -93,6 +93,15 @@ const MapView = () => {
   const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
   const [flyTarget, setFlyTarget] = useState<{ lat: number; lng: number } | null>(null);
   const { selectedFromSearch, clearSelection } = useCTOSearch();
+  const { performanceMode, performanceRadius } = useSettings();
+
+  // Filter CTOs based on performance mode
+  const visibleCTOs = useMemo(() => {
+    if (!performanceMode || !userLocation) return ctos;
+    return ctos.filter(
+      (cto) => getDistanceMeters(userLocation[0], userLocation[1], cto.lat, cto.lng) <= performanceRadius
+    );
+  }, [ctos, performanceMode, performanceRadius, userLocation]);
 
   // React to search selection
   useEffect(() => {
