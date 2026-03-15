@@ -22,8 +22,8 @@ export default defineConfig(({ mode }) => ({
         navigateFallbackDenylist: [/^\/~oauth/],
       },
       manifest: {
-        name: "Tech-Fiber",
-        short_name: "TechFiber",
+        name: "Z3 Tech Fiber",
+        short_name: "Z3TechFiber",
         description: "Gestão de CTOs e manutenção de fibra óptica",
         theme_color: "#0A0A0B",
         background_color: "#0A0A0B",
