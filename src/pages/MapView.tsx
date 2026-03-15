@@ -98,6 +98,7 @@ const MapView = () => {
 
   const handleClearRoute = () => {
     setRouteTarget(null);
+    setRouteInfo(null);
   };
 
   return (
