@@ -68,13 +68,42 @@ const userIcon = L.divIcon({
   iconAnchor: [8, 8],
 });
 
-function LocationFinder({ onLocationFound }: { onLocationFound: (lat: number, lng: number) => void }) {
+function LocationFinder({ onLocationFound, follow }: { onLocationFound: (lat: number, lng: number) => void; follow?: boolean }) {
   const map = useMap();
+  const watchRef = useRef<number | null>(null);
+
   useEffect(() => {
+    // Initial locate
     map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true });
     map.on("locationfound", (e) => onLocationFound(e.latlng.lat, e.latlng.lng));
     map.on("locationerror", () => map.setView([-23.5505, -46.6333], 15));
+
+    // Continuous watch
+    if (navigator.geolocation) {
+      watchRef.current = navigator.geolocation.watchPosition(
+        (pos) => {
+          onLocationFound(pos.coords.latitude, pos.coords.longitude);
+        },
+        undefined,
+        { enableHighAccuracy: true, maximumAge: 3000 }
+      );
+    }
+
+    return () => {
+      if (watchRef.current !== null) navigator.geolocation.clearWatch(watchRef.current);
+    };
   }, [map, onLocationFound]);
+
+  // Follow user when navigating
+  useEffect(() => {
+    if (!follow) return;
+    const handler = (e: L.LocationEvent) => {
+      map.panTo(e.latlng, { animate: true, duration: 0.5 });
+    };
+    map.on("locationfound", handler);
+    return () => { map.off("locationfound", handler); };
+  }, [map, follow]);
+
   return null;
 }
 
