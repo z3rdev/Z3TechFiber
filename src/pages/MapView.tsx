@@ -96,8 +96,8 @@ function LocationFinder({ onLocationFound, follow }: { onLocationFound: (lat: nu
   // Follow user when navigating + zoom closer
   useEffect(() => {
     if (!follow) return;
-    // Zoom in for navigation mode
-    map.setZoom(18, { animate: true });
+
+
     const handler = (e: L.LocationEvent) => {
       map.panTo(e.latlng, { animate: true, duration: 0.5 });
     };
