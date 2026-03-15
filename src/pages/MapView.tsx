@@ -4,6 +4,8 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { mockCTOs, type CTO } from "@/data/mock-data";
 import { CTODrawer } from "@/components/CTODrawer";
+import { CTOModal } from "@/components/CTOModal";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { RoutingControl, type RouteInfo } from "@/components/RoutingControl";
 import { RouteAnimation } from "@/components/RouteAnimation";
 import { OnboardingModal } from "@/components/OnboardingModal";
