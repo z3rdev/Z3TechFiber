@@ -93,7 +93,11 @@ const MapView = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [routeTarget, setRouteTarget] = useState<CTO | null>(null);
   const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
+  const [routeCoords, setRouteCoords] = useState<[number, number][]>([]);
   const [flyTarget, setFlyTarget] = useState<{ lat: number; lng: number } | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(
+    () => !localStorage.getItem("tech-fiber-onboarded")
+  );
   const { selectedFromSearch, clearSelection } = useCTOSearch();
   const { performanceMode, performanceRadius } = useSettings();
 
