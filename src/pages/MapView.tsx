@@ -121,6 +121,7 @@ function FlyTo({ lat, lng }: { lat: number; lng: number }) {
 
 const MapView = () => {
   const [ctos, setCTOs] = useState<CTO[]>(mockCTOs);
+  const isMobile = useIsMobile();
   const [selectedCTO, setSelectedCTO] = useState<CTO | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
