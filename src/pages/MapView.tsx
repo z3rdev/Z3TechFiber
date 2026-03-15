@@ -147,6 +147,7 @@ const MapView = () => {
   const handleClearRoute = () => {
     setRouteTarget(null);
     setRouteInfo(null);
+    setRouteCoords([]);
   };
 
   return (
