@@ -91,6 +91,7 @@ const MapView = () => {
       return;
     }
     setRouteTarget(cto);
+    setRouteInfo(null);
     setDrawerOpen(false);
     toast.success(`Rota traçada até ${cto.name}`);
   };
