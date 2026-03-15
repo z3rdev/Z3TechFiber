@@ -65,6 +65,14 @@ function LocationFinder({ onLocationFound }: { onLocationFound: (lat: number, ln
   return null;
 }
 
+function FlyTo({ lat, lng }: { lat: number; lng: number }) {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo([lat, lng], 17, { duration: 1 });
+  }, [map, lat, lng]);
+  return null;
+}
+
 const MapView = () => {
   const [ctos, setCTOs] = useState<CTO[]>(mockCTOs);
   const [selectedCTO, setSelectedCTO] = useState<CTO | null>(null);
