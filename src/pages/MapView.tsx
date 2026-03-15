@@ -5,6 +5,8 @@ import "leaflet/dist/leaflet.css";
 import { mockCTOs, type CTO } from "@/data/mock-data";
 import { CTODrawer } from "@/components/CTODrawer";
 import { RoutingControl, type RouteInfo } from "@/components/RoutingControl";
+import { RouteAnimation } from "@/components/RouteAnimation";
+import { OnboardingModal } from "@/components/OnboardingModal";
 import { useCTOSearch } from "@/contexts/CTOSearchContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { Button } from "@/components/ui/button";
