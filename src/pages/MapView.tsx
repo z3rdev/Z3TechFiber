@@ -27,31 +27,38 @@ function getDistanceMeters(lat1: number, lng1: number, lat2: number, lng2: numbe
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
-function createCTOIcon(activePorts: number, totalPorts: number, hasLOS: boolean) {
+function createCTOIcon(ctoId: string, activePorts: number, totalPorts: number, hasLOS: boolean) {
   const color = hasLOS ? "#c53030" : activePorts / totalPorts > 0.8 ? "#d69e2e" : "#059669";
+  const shortId = ctoId.replace("CTO-", "");
   return L.divIcon({
     className: "cto-marker",
     html: `
       <div style="
-        width: 36px; height: 42px; position: relative; cursor: pointer;
+        width: 48px; height: 52px; position: relative; cursor: pointer;
         filter: drop-shadow(0 1px 3px rgba(0,0,0,0.15));
       ">
-        <svg viewBox="0 0 36 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 2 L32 11 L32 29 L18 38 L4 29 L4 11 Z" 
+        <svg viewBox="0 0 48 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 2 L44 14 L44 38 L24 50 L4 38 L4 14 Z" 
                 fill="#ffffff" stroke="${color}" stroke-width="1.5" opacity="0.97"/>
         </svg>
         <div style="
           position: absolute; inset: 0; display: flex; flex-direction: column;
-          align-items: center; justify-content: center; padding-top: 1px;
+          align-items: center; justify-content: center; padding-top: 0px; gap: 1px;
         ">
-          <span style="font-size: 9px; font-weight: 600; color: ${color}; font-family: 'JetBrains Mono', monospace; letter-spacing: -0.5px;">
+          <span style="font-size: 8px; font-weight: 700; color: ${color}; font-family: 'JetBrains Mono', monospace; letter-spacing: -0.3px; line-height: 1;">
+            CTO
+          </span>
+          <span style="font-size: 11px; font-weight: 800; color: ${color}; font-family: 'JetBrains Mono', monospace; letter-spacing: -0.5px; line-height: 1;">
+            ${shortId}
+          </span>
+          <span style="font-size: 7px; font-weight: 500; color: ${color}; font-family: 'JetBrains Mono', monospace; opacity: 0.7; line-height: 1;">
             ${activePorts}/${totalPorts}
           </span>
         </div>
       </div>
     `,
-    iconSize: [36, 42],
-    iconAnchor: [18, 21],
+    iconSize: [48, 52],
+    iconAnchor: [24, 26],
   });
 }
 
