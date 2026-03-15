@@ -201,9 +201,13 @@ const MapView = () => {
             fromLng={userLocation[1]}
             toLat={routeTarget.lat}
             toLng={routeTarget.lng}
-            onRouteFound={setRouteInfo}
+           onRouteFound={setRouteInfo}
+            onRouteCoordinates={setRouteCoords}
           />
         )}
+
+        {/* Animated marker on route */}
+        {routeCoords.length > 1 && <RouteAnimation coordinates={routeCoords} />}
       </MapContainer>
 
       {/* Route info bar */}
