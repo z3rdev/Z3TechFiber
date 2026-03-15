@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 import { mockCTOs, type CTO } from "@/data/mock-data";
 import { CTODrawer } from "@/components/CTODrawer";
 import { RoutingControl, type RouteInfo } from "@/components/RoutingControl";
+import { useCTOSearch } from "@/contexts/CTOSearchContext";
 import { Button } from "@/components/ui/button";
 import { X, MapPin, Clock, Route } from "lucide-react";
 import { toast } from "sonner";
