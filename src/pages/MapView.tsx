@@ -137,6 +137,7 @@ const MapView = () => {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
         <LocationFinder onLocationFound={handleLocationFound} />
+        {flyTarget && <FlyTo lat={flyTarget.lat} lng={flyTarget.lng} />}
         {userLocation && <Marker position={userLocation} icon={userIcon} />}
         {ctos.map((cto) => {
           const hasLOS = cto.clients.some((c) => c.status === "los");
