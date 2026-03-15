@@ -70,7 +70,7 @@ const MapView = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [routeTarget, setRouteTarget] = useState<CTO | null>(null);
-
+  const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
   const handleLocationFound = useCallback((lat: number, lng: number) => {
     setUserLocation([lat, lng]);
   }, []);
