@@ -276,6 +276,8 @@ const MapView = () => {
         onNavigate={handleNavigate}
         hasUserLocation={!!userLocation}
       />
+
+      <OnboardingModal open={showOnboarding} onOpenChange={setShowOnboarding} />
     </div>
   );
 };
