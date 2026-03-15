@@ -14,11 +14,11 @@ function createCTOIcon(activePorts: number, totalPorts: number, hasLOS: boolean)
     html: `
       <div style="
         width: 36px; height: 42px; position: relative; cursor: pointer;
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        filter: drop-shadow(0 1px 3px rgba(0,0,0,0.15));
       ">
         <svg viewBox="0 0 36 42" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 2 L32 11 L32 29 L18 38 L4 29 L4 11 Z" 
-                fill="#1a202c" stroke="${color}" stroke-width="1.5" opacity="0.95"/>
+                fill="#ffffff" stroke="${color}" stroke-width="1.5" opacity="0.97"/>
         </svg>
         <div style="
           position: absolute; inset: 0; display: flex; flex-direction: column;
