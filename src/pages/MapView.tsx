@@ -14,11 +14,11 @@ function createCTOIcon(activePorts: number, totalPorts: number, hasLOS: boolean)
     html: `
       <div style="
         width: 36px; height: 42px; position: relative; cursor: pointer;
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        filter: drop-shadow(0 1px 3px rgba(0,0,0,0.15));
       ">
         <svg viewBox="0 0 36 42" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 2 L32 11 L32 29 L18 38 L4 29 L4 11 Z" 
-                fill="#1a202c" stroke="${color}" stroke-width="1.5" opacity="0.95"/>
+                fill="#ffffff" stroke="${color}" stroke-width="1.5" opacity="0.97"/>
         </svg>
         <div style="
           position: absolute; inset: 0; display: flex; flex-direction: column;
@@ -41,8 +41,8 @@ const userIcon = L.divIcon({
     <div style="width: 16px; height: 16px; position: relative;">
       <div style="
         width: 16px; height: 16px; border-radius: 50%;
-        background: #059669; border: 2.5px solid #1a202c;
-        box-shadow: 0 0 8px rgba(5,150,105,0.4);
+        background: #059669; border: 2.5px solid #ffffff;
+        box-shadow: 0 0 6px rgba(5,150,105,0.3);
       "></div>
     </div>
   `,
@@ -91,7 +91,7 @@ const MapView = () => {
       >
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
         <LocationFinder onLocationFound={handleLocationFound} />
         {userLocation && <Marker position={userLocation} icon={userIcon} />}

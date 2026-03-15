@@ -1,0 +1,11 @@
+Design system: Tema CLARO corporativo com verde profissional
+- Background: 0 0% 98% (off-white)
+- Card: 0 0% 100% (white)
+- Foreground: 220 15% 15% (dark gray)
+- Primary: 160 84% 39% (verde profissional #059669)
+- Status colors: online (green), LOS (red), high-signal (amber), offline (gray)
+- Fonts: Inter (body), JetBrains Mono (numbers/IDs)
+- PWA enabled with vite-plugin-pwa
+- Auth: mock login (any email + password "1234"), will connect backend later
+- Map: Leaflet with CARTO light tiles, react-leaflet v4.2.1 (React 18 compat)
+- Estilo: Light Elegante - cores sóbrias, verde profissional, premium corporativo
