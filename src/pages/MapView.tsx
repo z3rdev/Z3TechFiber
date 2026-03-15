@@ -4,6 +4,8 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { mockCTOs, type CTO } from "@/data/mock-data";
 import { CTODrawer } from "@/components/CTODrawer";
+import { CTOModal } from "@/components/CTOModal";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { RoutingControl, type RouteInfo } from "@/components/RoutingControl";
 import { RouteAnimation } from "@/components/RouteAnimation";
 import { OnboardingModal } from "@/components/OnboardingModal";
@@ -119,6 +121,7 @@ function FlyTo({ lat, lng }: { lat: number; lng: number }) {
 
 const MapView = () => {
   const [ctos, setCTOs] = useState<CTO[]>(mockCTOs);
+  const isMobile = useIsMobile();
   const [selectedCTO, setSelectedCTO] = useState<CTO | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
@@ -298,14 +301,25 @@ const MapView = () => {
         </div>
       )}
 
-      <CTODrawer
-        cto={selectedCTO}
-        open={drawerOpen}
-        onOpenChange={setDrawerOpen}
-        onUpdate={handleCTOUpdate}
-        onNavigate={handleNavigate}
-        hasUserLocation={!!userLocation}
-      />
+      {isMobile ? (
+        <CTODrawer
+          cto={selectedCTO}
+          open={drawerOpen}
+          onOpenChange={setDrawerOpen}
+          onUpdate={handleCTOUpdate}
+          onNavigate={handleNavigate}
+          hasUserLocation={!!userLocation}
+        />
+      ) : (
+        <CTOModal
+          cto={selectedCTO}
+          open={drawerOpen}
+          onOpenChange={setDrawerOpen}
+          onUpdate={handleCTOUpdate}
+          onNavigate={handleNavigate}
+          hasUserLocation={!!userLocation}
+        />
+      )}
 
       <OnboardingModal open={showOnboarding} onOpenChange={setShowOnboarding} />
     </div>
