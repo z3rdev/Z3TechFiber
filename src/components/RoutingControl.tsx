@@ -15,13 +15,16 @@ interface RoutingControlProps {
   toLat: number;
   toLng: number;
   onRouteFound?: (info: RouteInfo) => void;
+  onRouteCoordinates?: (coords: [number, number][]) => void;
 }
 
-export function RoutingControl({ fromLat, fromLng, toLat, toLng, onRouteFound }: RoutingControlProps) {
+export function RoutingControl({ fromLat, fromLng, toLat, toLng, onRouteFound, onRouteCoordinates }: RoutingControlProps) {
   const map = useMap();
   const routingRef = useRef<L.Routing.Control | null>(null);
   const onRouteFoundRef = useRef(onRouteFound);
+  const onRouteCoordsRef = useRef(onRouteCoordinates);
   onRouteFoundRef.current = onRouteFound;
+  onRouteCoordsRef.current = onRouteCoordinates;
 
   useEffect(() => {
     if (!map) return;
@@ -49,21 +52,28 @@ export function RoutingControl({ fromLat, fromLng, toLat, toLng, onRouteFound }:
 
     control.on("routesfound", (e: any) => {
       const route = e.routes?.[0];
-      if (route && onRouteFoundRef.current) {
-        const distanceKm = Math.round((route.summary.totalDistance / 1000) * 10) / 10;
-        const durationMin = Math.round(route.summary.totalTime / 60);
+      if (route) {
+        if (onRouteFoundRef.current) {
+          const distanceKm = Math.round((route.summary.totalDistance / 1000) * 10) / 10;
+          const durationMin = Math.round(route.summary.totalTime / 60);
 
-        let streetName = "";
-        if (route.instructions && route.instructions.length > 0) {
-          for (const inst of route.instructions) {
-            if (inst.road && inst.road.trim()) {
-              streetName = inst.road.trim();
-              break;
+          let streetName = "";
+          if (route.instructions && route.instructions.length > 0) {
+            for (const inst of route.instructions) {
+              if (inst.road && inst.road.trim()) {
+                streetName = inst.road.trim();
+                break;
+              }
             }
           }
+
+          onRouteFoundRef.current({ distanceKm, durationMin, streetName });
         }
 
-        onRouteFoundRef.current({ distanceKm, durationMin, streetName });
+        if (onRouteCoordsRef.current && route.coordinates) {
+          const coords: [number, number][] = route.coordinates.map((c: any) => [c.lat, c.lng]);
+          onRouteCoordsRef.current(coords);
+        }
       }
     });
 

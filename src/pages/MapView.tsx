@@ -5,6 +5,8 @@ import "leaflet/dist/leaflet.css";
 import { mockCTOs, type CTO } from "@/data/mock-data";
 import { CTODrawer } from "@/components/CTODrawer";
 import { RoutingControl, type RouteInfo } from "@/components/RoutingControl";
+import { RouteAnimation } from "@/components/RouteAnimation";
+import { OnboardingModal } from "@/components/OnboardingModal";
 import { useCTOSearch } from "@/contexts/CTOSearchContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { Button } from "@/components/ui/button";
@@ -91,7 +93,11 @@ const MapView = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [routeTarget, setRouteTarget] = useState<CTO | null>(null);
   const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
+  const [routeCoords, setRouteCoords] = useState<[number, number][]>([]);
   const [flyTarget, setFlyTarget] = useState<{ lat: number; lng: number } | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(
+    () => !localStorage.getItem("tech-fiber-onboarded")
+  );
   const { selectedFromSearch, clearSelection } = useCTOSearch();
   const { performanceMode, performanceRadius } = useSettings();
 
@@ -141,6 +147,7 @@ const MapView = () => {
   const handleClearRoute = () => {
     setRouteTarget(null);
     setRouteInfo(null);
+    setRouteCoords([]);
   };
 
   return (
@@ -194,9 +201,13 @@ const MapView = () => {
             fromLng={userLocation[1]}
             toLat={routeTarget.lat}
             toLng={routeTarget.lng}
-            onRouteFound={setRouteInfo}
+           onRouteFound={setRouteInfo}
+            onRouteCoordinates={setRouteCoords}
           />
         )}
+
+        {/* Animated marker on route */}
+        {routeCoords.length > 1 && <RouteAnimation coordinates={routeCoords} />}
       </MapContainer>
 
       {/* Route info bar */}
@@ -265,6 +276,8 @@ const MapView = () => {
         onNavigate={handleNavigate}
         hasUserLocation={!!userLocation}
       />
+
+      <OnboardingModal open={showOnboarding} onOpenChange={setShowOnboarding} />
     </div>
   );
 };
