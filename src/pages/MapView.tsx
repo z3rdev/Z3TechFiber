@@ -8,7 +8,7 @@ import { RoutingControl, type RouteInfo } from "@/components/RoutingControl";
 import { useCTOSearch } from "@/contexts/CTOSearchContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { Button } from "@/components/ui/button";
-import { X, MapPin, Clock, Route } from "lucide-react";
+import { X, MapPin, Clock, Route, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 function getDistanceMeters(lat1: number, lng1: number, lat2: number, lng2: number): number {
@@ -247,6 +247,15 @@ const MapView = () => {
         </div>
       )}
 
+      {/* Performance mode badge */}
+      {performanceMode && (
+        <div className="absolute bottom-4 left-4 z-[1000] bg-primary/10 border border-primary/30 rounded-md px-3 py-1.5 flex items-center gap-2">
+          <Zap className="w-3.5 h-3.5 text-primary" />
+          <span className="text-xs font-medium text-primary">
+            Desempenho · {performanceRadius}m · {visibleCTOs.length}/{ctos.length} CTOs
+          </span>
+        </div>
+      )}
 
       <CTODrawer
         cto={selectedCTO}
