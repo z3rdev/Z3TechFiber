@@ -1,14 +1,18 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSettings } from "@/contexts/SettingsContext";
-import { User, Shield, Zap } from "lucide-react";
+import { OnboardingModal } from "@/components/OnboardingModal";
+import { User, Shield, Zap, BookOpen } from "lucide-react";
 
 const Settings = () => {
   const { user } = useAuth();
   const { performanceMode, setPerformanceMode, performanceRadius, setPerformanceRadius } = useSettings();
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   return (
     <div className="p-4 md:p-6 space-y-6 overflow-y-auto h-full">
@@ -89,12 +93,23 @@ const Settings = () => {
             Sistema
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-3">
           <p className="text-sm text-muted-foreground">
             Versão 1.0.0 — Dados mock ativados
           </p>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={() => setShowOnboarding(true)}
+          >
+            <BookOpen className="w-4 h-4" />
+            Ver tutorial de apresentação
+          </Button>
         </CardContent>
       </Card>
+
+      <OnboardingModal open={showOnboarding} onOpenChange={setShowOnboarding} />
     </div>
   );
 };
