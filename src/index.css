@@ -115,20 +115,20 @@
   50% { opacity: 0.5; }
 }
 
-/* Leaflet overrides for dark theme */
+/* Leaflet overrides for light theme */
 .leaflet-container {
-  background: hsl(220 20% 10%) !important;
+  background: hsl(0 0% 98%) !important;
 }
 
 .leaflet-control-zoom a {
-  background: hsl(220 18% 15%) !important;
-  color: hsl(210 15% 85%) !important;
-  border-color: hsl(220 14% 20%) !important;
+  background: hsl(0 0% 100%) !important;
+  color: hsl(220 15% 25%) !important;
+  border-color: hsl(220 13% 88%) !important;
 }
 
 .leaflet-control-attribution {
-  background: hsl(220 18% 13% / 0.85) !important;
-  color: hsl(215 12% 55%) !important;
+  background: hsl(0 0% 100% / 0.9) !important;
+  color: hsl(220 10% 46%) !important;
   font-size: 10px !important;
 }
 
