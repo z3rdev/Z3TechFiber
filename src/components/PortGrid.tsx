@@ -22,10 +22,7 @@ export function PortGrid({ cto, onUpdate }: PortGridProps) {
       if (swapping) return;
 
       if (selectedPort === null) {
-        // Only select occupied ports
-        if (getClient(port)) {
-          setSelectedPort(port);
-        }
+        if (getClient(port)) setSelectedPort(port);
         return;
       }
 
@@ -34,7 +31,6 @@ export function PortGrid({ cto, onUpdate }: PortGridProps) {
         return;
       }
 
-      // Execute move/swap
       const sourceClient = getClient(selectedPort);
       const destClient = getClient(port);
 
@@ -49,47 +45,43 @@ export function PortGrid({ cto, onUpdate }: PortGridProps) {
         const updatedClients = [...cto.clients];
 
         if (!destClient) {
-          // Move direto — porta livre
           const idx = updatedClients.findIndex((c) => c.id === sourceClient.id);
           updatedClients[idx] = { ...sourceClient, port };
           toast.success(`${sourceClient.name} movido para porta ${String(port).padStart(2, "0")}`);
         } else {
-          // Smart Swap
           const srcIdx = updatedClients.findIndex((c) => c.id === sourceClient.id);
           const destIdx = updatedClients.findIndex((c) => c.id === destClient.id);
           updatedClients[srcIdx] = { ...sourceClient, port };
           updatedClients[destIdx] = { ...destClient, port: selectedPort };
           toast.success(
-            `Swap: ${sourceClient.name} ↔ ${destClient.name} (portas ${String(selectedPort).padStart(2, "0")} ↔ ${String(port).padStart(2, "0")})`
+            `Swap: ${sourceClient.name} ↔ ${destClient.name}`
           );
         }
 
         onUpdate({ ...cto, clients: updatedClients });
         setSelectedPort(null);
         setSwapping(false);
-      }, 800);
+      }, 600);
     },
     [selectedPort, cto, swapping, onUpdate]
   );
-
-  const cols = cto.totalPorts <= 8 ? 2 : 2;
 
   return (
     <div className="space-y-3">
       {selectedPort && (
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20 text-sm"
+          className="flex items-center gap-2 px-3 py-2 rounded-md bg-primary/8 border border-primary/20 text-xs"
         >
-          <ArrowRightLeft className="w-4 h-4 text-primary" />
-          <span className="text-primary">
-            Porta {String(selectedPort).padStart(2, "0")} selecionada — toque na porta destino
+          <ArrowRightLeft className="w-3.5 h-3.5 text-primary" />
+          <span className="text-foreground">
+            Porta <span className="font-mono font-semibold">{String(selectedPort).padStart(2, "0")}</span> selecionada — toque no destino
           </span>
         </motion.div>
       )}
 
-      <div className={`grid grid-cols-${cols} gap-2`}>
+      <div className="grid grid-cols-2 gap-2">
         <AnimatePresence mode="popLayout">
           {Array.from({ length: cto.totalPorts }, (_, i) => i + 1).map((port) => {
             const client = getClient(port);
@@ -104,19 +96,18 @@ export function PortGrid({ cto, onUpdate }: PortGridProps) {
                 onClick={() => handlePortClick(port)}
                 disabled={swapping}
                 className={cn(
-                  "relative flex flex-col p-3 rounded-lg border text-left transition-all touch-target",
-                  "bg-card hover:bg-card/80",
-                  isEmpty && "border-border/50 opacity-60",
+                  "relative flex flex-col p-3 rounded-md border text-left transition-all",
+                  "bg-secondary/50 hover:bg-secondary/80",
+                  isEmpty && "border-border/40 opacity-50",
                   !isEmpty && "border-border",
-                  isSelected && "glow-cyan border-primary bg-primary/5",
-                  isSwapTarget && !isEmpty && "border-primary/30 hover:border-primary/60",
-                  isSwapTarget && isEmpty && "border-dashed border-primary/40 hover:border-primary/60 opacity-100",
-                  swapping && (isSelected || (selectedPort !== null && port === selectedPort)) && "animate-swap-pulse"
+                  isSelected && "border-primary bg-primary/5 shadow-sm",
+                  isSwapTarget && !isEmpty && "border-border hover:border-primary/40",
+                  isSwapTarget && isEmpty && "border-dashed border-primary/30 hover:border-primary/50 opacity-100",
+                  swapping && isSelected && "animate-swap-pulse"
                 )}
               >
-                {/* Port number */}
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="font-mono text-xs font-semibold text-muted-foreground">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-mono text-[11px] font-medium text-muted-foreground">
                     P{String(port).padStart(2, "0")}
                   </span>
                   {client && <StatusLed status={client.status} />}
@@ -124,20 +115,20 @@ export function PortGrid({ cto, onUpdate }: PortGridProps) {
 
                 {client ? (
                   <>
-                    <span className="text-sm font-medium text-foreground truncate">
+                    <span className="text-xs font-medium text-foreground truncate leading-tight">
                       {client.name}
                     </span>
                     <div className="flex items-center justify-between mt-1">
-                      <span className="font-mono text-xs text-muted-foreground">
+                      <span className="font-mono text-[10px] text-muted-foreground">
                         {client.signal !== 0 ? `${client.signal} dBm` : "—"}
                       </span>
-                      <span className="font-mono text-[10px] text-muted-foreground/60">
+                      <span className="font-mono text-[9px] text-muted-foreground/50">
                         {client.id}
                       </span>
                     </div>
                   </>
                 ) : (
-                  <span className="text-xs text-muted-foreground/50 italic">Livre</span>
+                  <span className="text-[11px] text-muted-foreground/40">Livre</span>
                 )}
               </motion.button>
             );

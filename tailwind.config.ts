@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["IBM Plex Sans", "system-ui", "sans-serif"],
-        mono: ["IBM Plex Mono", "monospace"],
+        sans: ["Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -84,8 +84,8 @@ export default {
           to: { height: "0" },
         },
         "swap-pulse": {
-          "0%, 100%": { boxShadow: "0 0 10px hsl(var(--status-swap) / 0.3)" },
-          "50%": { boxShadow: "0 0 25px hsl(var(--status-swap) / 0.7)" },
+          "0%, 100%": { boxShadow: "0 0 8px hsl(var(--status-swap) / 0.2)" },
+          "50%": { boxShadow: "0 0 18px hsl(var(--status-swap) / 0.5)" },
         },
       },
       animation: {
