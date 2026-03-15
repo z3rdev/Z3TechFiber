@@ -41,8 +41,8 @@ const userIcon = L.divIcon({
     <div style="width: 16px; height: 16px; position: relative;">
       <div style="
         width: 16px; height: 16px; border-radius: 50%;
-        background: #059669; border: 2.5px solid #1a202c;
-        box-shadow: 0 0 8px rgba(5,150,105,0.4);
+        background: #059669; border: 2.5px solid #ffffff;
+        box-shadow: 0 0 6px rgba(5,150,105,0.3);
       "></div>
     </div>
   `,
