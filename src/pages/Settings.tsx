@@ -1,14 +1,18 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSettings } from "@/contexts/SettingsContext";
-import { User, Shield, Zap } from "lucide-react";
+import { OnboardingModal } from "@/components/OnboardingModal";
+import { User, Shield, Zap, BookOpen } from "lucide-react";
 
 const Settings = () => {
   const { user } = useAuth();
   const { performanceMode, setPerformanceMode, performanceRadius, setPerformanceRadius } = useSettings();
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   return (
     <div className="p-4 md:p-6 space-y-6 overflow-y-auto h-full">
