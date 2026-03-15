@@ -230,7 +230,7 @@ const MapView = () => {
             <Marker
               key={cto.id}
               position={[cto.lat, cto.lng]}
-              icon={createCTOIcon(cto.clients.length, cto.totalPorts, hasLOS)}
+              icon={createCTOIcon(cto.id, cto.clients.length, cto.totalPorts, hasLOS)}
               eventHandlers={{ click: () => handleCTOClick(cto) }}
             />
           );
