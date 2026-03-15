@@ -4,9 +4,9 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { mockCTOs, type CTO } from "@/data/mock-data";
 import { CTODrawer } from "@/components/CTODrawer";
-import { RoutingControl } from "@/components/RoutingControl";
+import { RoutingControl, type RouteInfo } from "@/components/RoutingControl";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, MapPin, Clock, Route } from "lucide-react";
 import { toast } from "sonner";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -70,7 +70,7 @@ const MapView = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [routeTarget, setRouteTarget] = useState<CTO | null>(null);
-
+  const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
   const handleLocationFound = useCallback((lat: number, lng: number) => {
     setUserLocation([lat, lng]);
   }, []);
@@ -91,12 +91,14 @@ const MapView = () => {
       return;
     }
     setRouteTarget(cto);
+    setRouteInfo(null);
     setDrawerOpen(false);
     toast.success(`Rota traçada até ${cto.name}`);
   };
 
   const handleClearRoute = () => {
     setRouteTarget(null);
+    setRouteInfo(null);
   };
 
   return (
@@ -132,28 +134,52 @@ const MapView = () => {
             from={userLocation}
             to={[routeTarget.lat, routeTarget.lng]}
             onClear={handleClearRoute}
+            onRouteFound={setRouteInfo}
           />
         )}
       </MapContainer>
 
       {/* Route info bar */}
       {routeTarget && (
-        <div className="absolute top-4 left-4 right-4 z-[1000] bg-card/95 backdrop-blur-sm border border-border rounded-lg p-3 flex items-center gap-3 shadow-sm">
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground truncate">
-              Navegando até {routeTarget.name}
-            </p>
-            <p className="text-xs text-muted-foreground font-mono">{routeTarget.id}</p>
+        <div className="absolute top-4 left-4 right-4 z-[1000] bg-card/95 backdrop-blur-sm border border-border rounded-lg p-3 shadow-sm space-y-2">
+          <div className="flex items-center gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground truncate">
+                Navegando até {routeTarget.name}
+              </p>
+              <p className="text-xs text-muted-foreground font-mono">{routeTarget.id}</p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleClearRoute}
+              className="gap-1.5 flex-shrink-0"
+            >
+              <X className="w-3.5 h-3.5" />
+              Cancelar
+            </Button>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleClearRoute}
-            className="gap-1.5 flex-shrink-0"
-          >
-            <X className="w-3.5 h-3.5" />
-            Cancelar
-          </Button>
+
+          {routeInfo && (
+            <div className="flex items-center gap-4 pt-1 border-t border-border">
+              {routeInfo.streetName && (
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                  <span className="text-xs text-foreground truncate">{routeInfo.streetName}</span>
+                </div>
+              )}
+              <div className="flex items-center gap-1.5">
+                <Route className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                <span className="text-xs font-mono text-foreground">{routeInfo.distanceKm} km</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                <span className="text-xs font-mono text-foreground">
+                  {routeInfo.durationMin < 1 ? "<1" : routeInfo.durationMin} min
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

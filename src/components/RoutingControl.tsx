@@ -3,20 +3,26 @@ import { useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet-routing-machine";
 
+export interface RouteInfo {
+  distanceKm: number;
+  durationMin: number;
+  streetName: string;
+}
+
 interface RoutingControlProps {
   from: [number, number];
   to: [number, number];
   onClear: () => void;
+  onRouteFound?: (info: RouteInfo) => void;
 }
 
-export function RoutingControl({ from, to, onClear }: RoutingControlProps) {
+export function RoutingControl({ from, to, onClear, onRouteFound }: RoutingControlProps) {
   const map = useMap();
   const routingRef = useRef<L.Routing.Control | null>(null);
 
   useEffect(() => {
     if (!map || !from || !to) return;
 
-    // Clean previous route
     if (routingRef.current) {
       map.removeControl(routingRef.current);
     }
@@ -28,21 +34,39 @@ export function RoutingControl({ from, to, onClear }: RoutingControlProps) {
       fitSelectedRoutes: true,
       showAlternatives: false,
       lineOptions: {
-        styles: [
-          { color: "#059669", weight: 5, opacity: 0.8 },
-        ],
+        styles: [{ color: "#059669", weight: 5, opacity: 0.8 }],
         extendToWaypoints: true,
         missingRouteTolerance: 10,
       },
-      show: false, // hide text instructions
+      show: false,
       // @ts-ignore
-      createMarker: () => null, // don't create default markers
+      createMarker: () => null,
+    });
+
+    control.on("routesfound", (e: any) => {
+      const route = e.routes?.[0];
+      if (route && onRouteFound) {
+        const distanceKm = Math.round((route.summary.totalDistance / 1000) * 10) / 10;
+        const durationMin = Math.round(route.summary.totalTime / 60);
+
+        // Get the first meaningful street name from instructions
+        let streetName = "";
+        if (route.instructions && route.instructions.length > 0) {
+          for (const inst of route.instructions) {
+            if (inst.road && inst.road.trim()) {
+              streetName = inst.road.trim();
+              break;
+            }
+          }
+        }
+
+        onRouteFound({ distanceKm, durationMin, streetName });
+      }
     });
 
     control.addTo(map);
     routingRef.current = control;
 
-    // Hide the routing container that may appear
     const containers = document.querySelectorAll(".leaflet-routing-container");
     containers.forEach((el) => {
       (el as HTMLElement).style.display = "none";
