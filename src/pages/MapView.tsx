@@ -192,7 +192,7 @@ const MapView = () => {
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
-        <LocationFinder onLocationFound={handleLocationFound} />
+        <LocationFinder onLocationFound={handleLocationFound} follow={!!routeTarget} />
         {flyTarget && <FlyTo lat={flyTarget.lat} lng={flyTarget.lng} />}
         {userLocation && <Marker position={userLocation} icon={userIcon} />}
 
