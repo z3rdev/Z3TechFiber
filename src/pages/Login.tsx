@@ -29,27 +29,27 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-6">
       <div className="w-full max-w-sm space-y-8">
         {/* Logo */}
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center glow-cyan">
-            <Wifi className="w-8 h-8 text-primary" />
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-14 h-14 rounded-xl bg-primary/15 flex items-center justify-center">
+            <Wifi className="w-7 h-7 text-primary" />
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Tech-<span className="text-primary">Fiber</span>
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+              Tech-Fiber
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Gestão de fibra óptica
+              Plataforma de gestão de fibra óptica
             </p>
           </div>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium text-foreground">
               Email
             </label>
             <Input
@@ -58,29 +58,29 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="h-12 bg-card border-border focus:border-primary"
+              className="h-11 bg-secondary border-border"
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium text-foreground">
               Senha
             </label>
             <div className="relative">
               <Input
                 type={showPassword ? "text" : "password"}
-                placeholder="••••"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="h-12 bg-card border-border focus:border-primary pr-12"
+                className="h-11 bg-secondary border-border pr-11"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground touch-target flex items-center justify-center"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
           </div>
@@ -88,14 +88,14 @@ const Login = () => {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full h-12 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90"
+            className="w-full h-11 font-medium"
           >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Entrar"}
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Entrar"}
           </Button>
         </form>
 
         <p className="text-center text-xs text-muted-foreground">
-          Demo: qualquer email + senha <span className="font-mono text-primary">1234</span>
+          Demo: qualquer email + senha <span className="font-mono text-foreground">1234</span>
         </p>
       </div>
     </div>
