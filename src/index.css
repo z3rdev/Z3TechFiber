@@ -135,3 +135,8 @@
 .leaflet-control-attribution a {
   color: hsl(160 84% 39%) !important;
 }
+
+/* Hide leaflet routing machine default panel */
+.leaflet-routing-container {
+  display: none !important;
+}

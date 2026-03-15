@@ -1,18 +1,21 @@
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { PortGrid } from "@/components/PortGrid";
 import { StatusLed } from "@/components/StatusLed";
 import type { CTO } from "@/data/mock-data";
-import { Hexagon } from "lucide-react";
+import { Hexagon, Navigation } from "lucide-react";
 
 interface CTODrawerProps {
   cto: CTO | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUpdate: (cto: CTO) => void;
+  onNavigate?: (cto: CTO) => void;
+  hasUserLocation?: boolean;
 }
 
-export function CTODrawer({ cto, open, onOpenChange, onUpdate }: CTODrawerProps) {
+export function CTODrawer({ cto, open, onOpenChange, onUpdate, onNavigate, hasUserLocation }: CTODrawerProps) {
   if (!cto) return null;
 
   const activePorts = cto.clients.length;
@@ -32,6 +35,15 @@ export function CTODrawer({ cto, open, onOpenChange, onUpdate }: CTODrawerProps)
               <DrawerTitle className="text-foreground">{cto.id}</DrawerTitle>
               <DrawerDescription className="text-muted-foreground">{cto.name}</DrawerDescription>
             </div>
+            <Button
+              size="sm"
+              onClick={() => onNavigate?.(cto)}
+              disabled={!hasUserLocation}
+              className="gap-1.5"
+            >
+              <Navigation className="w-4 h-4" />
+              Ir até
+            </Button>
           </div>
 
           {/* Status bar */}
