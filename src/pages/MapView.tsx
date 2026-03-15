@@ -195,7 +195,7 @@ const MapView = () => {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
         <LocationFinder onLocationFound={handleLocationFound} follow={!!routeTarget} />
-        <NavigationTilt active={!!routeTarget} />
+        
         {flyTarget && <FlyTo lat={flyTarget.lat} lng={flyTarget.lng} />}
         {userLocation && <Marker position={userLocation} icon={userIcon} />}
 
