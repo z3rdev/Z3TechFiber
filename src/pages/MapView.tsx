@@ -8,7 +8,7 @@ import { RoutingControl, type RouteInfo } from "@/components/RoutingControl";
 import { useCTOSearch } from "@/contexts/CTOSearchContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { Button } from "@/components/ui/button";
-import { X, MapPin, Clock, Route } from "lucide-react";
+import { X, MapPin, Clock, Route, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 function getDistanceMeters(lat1: number, lng1: number, lat2: number, lng2: number): number {
