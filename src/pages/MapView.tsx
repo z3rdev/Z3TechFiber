@@ -4,9 +4,9 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { mockCTOs, type CTO } from "@/data/mock-data";
 import { CTODrawer } from "@/components/CTODrawer";
-import { RoutingControl } from "@/components/RoutingControl";
+import { RoutingControl, type RouteInfo } from "@/components/RoutingControl";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, MapPin, Clock, Route } from "lucide-react";
 import { toast } from "sonner";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
