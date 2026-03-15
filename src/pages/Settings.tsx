@@ -93,12 +93,23 @@ const Settings = () => {
             Sistema
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-3">
           <p className="text-sm text-muted-foreground">
             Versão 1.0.0 — Dados mock ativados
           </p>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={() => setShowOnboarding(true)}
+          >
+            <BookOpen className="w-4 h-4" />
+            Ver tutorial de apresentação
+          </Button>
         </CardContent>
       </Card>
+
+      <OnboardingModal open={showOnboarding} onOpenChange={setShowOnboarding} />
     </div>
   );
 };
