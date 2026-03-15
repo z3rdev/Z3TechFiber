@@ -301,14 +301,25 @@ const MapView = () => {
         </div>
       )}
 
-      <CTODrawer
-        cto={selectedCTO}
-        open={drawerOpen}
-        onOpenChange={setDrawerOpen}
-        onUpdate={handleCTOUpdate}
-        onNavigate={handleNavigate}
-        hasUserLocation={!!userLocation}
-      />
+      {isMobile ? (
+        <CTODrawer
+          cto={selectedCTO}
+          open={drawerOpen}
+          onOpenChange={setDrawerOpen}
+          onUpdate={handleCTOUpdate}
+          onNavigate={handleNavigate}
+          hasUserLocation={!!userLocation}
+        />
+      ) : (
+        <CTOModal
+          cto={selectedCTO}
+          open={drawerOpen}
+          onOpenChange={setDrawerOpen}
+          onUpdate={handleCTOUpdate}
+          onNavigate={handleNavigate}
+          hasUserLocation={!!userLocation}
+        />
+      )}
 
       <OnboardingModal open={showOnboarding} onOpenChange={setShowOnboarding} />
     </div>
