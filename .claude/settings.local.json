@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd:*)",
+      "Read(//c/Users/Usuario/projects/Z3RO/TECHFIBER/FRONTEND/**)",
+      "Bash(pnpm add:*)",
+      "Read(//mnt/c/Users/Usuario/projects/Z3RO/TECHFIBER/FRONTEND/**)",
+      "Read(//wsl.localhost/Ubuntu/home/usuario/projects/Z3RO/TECHFIBER/FRONTEND/**)",
+      "Bash(wsl:*)"
+    ]
+  }
+}
