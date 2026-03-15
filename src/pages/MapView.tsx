@@ -159,7 +159,23 @@ const MapView = () => {
         <LocationFinder onLocationFound={handleLocationFound} />
         {flyTarget && <FlyTo lat={flyTarget.lat} lng={flyTarget.lng} />}
         {userLocation && <Marker position={userLocation} icon={userIcon} />}
-        {ctos.map((cto) => {
+
+        {/* Performance mode radius circle */}
+        {performanceMode && userLocation && (
+          <Circle
+            center={userLocation}
+            radius={performanceRadius}
+            pathOptions={{
+              color: "#059669",
+              fillColor: "#059669",
+              fillOpacity: 0.06,
+              weight: 1.5,
+              dashArray: "6 4",
+            }}
+          />
+        )}
+
+        {visibleCTOs.map((cto) => {
           const hasLOS = cto.clients.some((c) => c.status === "los");
           return (
             <Marker
