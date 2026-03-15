@@ -4,6 +4,10 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { mockCTOs, type CTO } from "@/data/mock-data";
 import { CTODrawer } from "@/components/CTODrawer";
+import { RoutingControl } from "@/components/RoutingControl";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import { toast } from "sonner";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -65,6 +69,7 @@ const MapView = () => {
   const [selectedCTO, setSelectedCTO] = useState<CTO | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [routeTarget, setRouteTarget] = useState<CTO | null>(null);
 
   const handleLocationFound = useCallback((lat: number, lng: number) => {
     setUserLocation([lat, lng]);
@@ -78,6 +83,20 @@ const MapView = () => {
   const handleCTOUpdate = (updated: CTO) => {
     setCTOs((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
     setSelectedCTO(updated);
+  };
+
+  const handleNavigate = (cto: CTO) => {
+    if (!userLocation) {
+      toast.error("Localização não disponível. Ative o GPS.");
+      return;
+    }
+    setRouteTarget(cto);
+    setDrawerOpen(false);
+    toast.success(`Rota traçada até ${cto.name}`);
+  };
+
+  const handleClearRoute = () => {
+    setRouteTarget(null);
   };
 
   return (
@@ -106,7 +125,37 @@ const MapView = () => {
             />
           );
         })}
+
+        {/* Routing */}
+        {routeTarget && userLocation && (
+          <RoutingControl
+            from={userLocation}
+            to={[routeTarget.lat, routeTarget.lng]}
+            onClear={handleClearRoute}
+          />
+        )}
       </MapContainer>
+
+      {/* Route info bar */}
+      {routeTarget && (
+        <div className="absolute top-4 left-4 right-4 z-[1000] bg-card/95 backdrop-blur-sm border border-border rounded-lg p-3 flex items-center gap-3 shadow-sm">
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground truncate">
+              Navegando até {routeTarget.name}
+            </p>
+            <p className="text-xs text-muted-foreground font-mono">{routeTarget.id}</p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleClearRoute}
+            className="gap-1.5 flex-shrink-0"
+          >
+            <X className="w-3.5 h-3.5" />
+            Cancelar
+          </Button>
+        </div>
+      )}
 
       {/* Legend */}
       <div className="absolute bottom-4 right-4 z-[1000] bg-card/95 backdrop-blur-sm border border-border rounded-md p-2.5 space-y-1.5">
@@ -125,7 +174,14 @@ const MapView = () => {
         </div>
       </div>
 
-      <CTODrawer cto={selectedCTO} open={drawerOpen} onOpenChange={setDrawerOpen} onUpdate={handleCTOUpdate} />
+      <CTODrawer
+        cto={selectedCTO}
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+        onUpdate={handleCTOUpdate}
+        onNavigate={handleNavigate}
+        hasUserLocation={!!userLocation}
+      />
     </div>
   );
 };
