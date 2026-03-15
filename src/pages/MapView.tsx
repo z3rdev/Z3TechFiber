@@ -206,8 +206,6 @@ const MapView = () => {
           />
         )}
 
-        {/* Animated marker on route */}
-        {routeCoords.length > 1 && <RouteAnimation coordinates={routeCoords} />}
       </MapContainer>
 
       {/* Route info bar */}
