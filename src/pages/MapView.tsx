@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 import { mockCTOs, type CTO } from "@/data/mock-data";
 import { CTODrawer } from "@/components/CTODrawer";
 import { RoutingControl, type RouteInfo } from "@/components/RoutingControl";
+import { useCTOSearch } from "@/contexts/CTOSearchContext";
 import { Button } from "@/components/ui/button";
 import { X, MapPin, Clock, Route } from "lucide-react";
 import { toast } from "sonner";
@@ -64,6 +65,14 @@ function LocationFinder({ onLocationFound }: { onLocationFound: (lat: number, ln
   return null;
 }
 
+function FlyTo({ lat, lng }: { lat: number; lng: number }) {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo([lat, lng], 17, { duration: 1 });
+  }, [map, lat, lng]);
+  return null;
+}
+
 const MapView = () => {
   const [ctos, setCTOs] = useState<CTO[]>(mockCTOs);
   const [selectedCTO, setSelectedCTO] = useState<CTO | null>(null);
@@ -71,6 +80,19 @@ const MapView = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [routeTarget, setRouteTarget] = useState<CTO | null>(null);
   const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
+  const [flyTarget, setFlyTarget] = useState<{ lat: number; lng: number } | null>(null);
+  const { selectedFromSearch, clearSelection } = useCTOSearch();
+
+  // React to search selection
+  useEffect(() => {
+    if (selectedFromSearch) {
+      setSelectedCTO(selectedFromSearch);
+      setDrawerOpen(true);
+      setFlyTarget({ lat: selectedFromSearch.lat, lng: selectedFromSearch.lng });
+      clearSelection();
+    }
+  }, [selectedFromSearch, clearSelection]);
+
   const handleLocationFound = useCallback((lat: number, lng: number) => {
     setUserLocation([lat, lng]);
   }, []);
@@ -115,6 +137,7 @@ const MapView = () => {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
         <LocationFinder onLocationFound={handleLocationFound} />
+        {flyTarget && <FlyTo lat={flyTarget.lat} lng={flyTarget.lng} />}
         {userLocation && <Marker position={userLocation} icon={userIcon} />}
         {ctos.map((cto) => {
           const hasLOS = cto.clients.some((c) => c.status === "los");

@@ -1,10 +1,10 @@
 import {
   Wifi, Map, LayoutDashboard, BarChart3, Settings, Info,
-  Wrench, LogOut, Search
+  Wrench, LogOut, Search, Hexagon
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
-import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCTOSearch } from "@/contexts/CTOSearchContext";
 import { Input } from "@/components/ui/input";
 import {
   Sidebar,
@@ -36,6 +36,7 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const { user, logout } = useAuth();
+  const { searchQuery, setSearchQuery, searchResults, selectCTO } = useCTOSearch();
 
   return (
     <Sidebar collapsible="icon" className="border-r border-border">
@@ -51,14 +52,45 @@ export function AppSidebar() {
           )}
         </div>
         {!collapsed && (
-          <div className="mt-3">
+          <div className="mt-3 relative">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
               <Input
-                placeholder="Buscar..."
+                placeholder="Buscar CTO..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="h-8 pl-8 bg-secondary/50 border-border text-xs"
               />
             </div>
+            {/* Search results dropdown */}
+            {searchResults.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+                {searchResults.map((cto) => {
+                  const losCount = cto.clients.filter((c) => c.status === "los").length;
+                  return (
+                    <button
+                      key={cto.id}
+                      onClick={() => selectCTO(cto)}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-secondary/70 transition-colors text-left"
+                    >
+                      <Hexagon className="w-4 h-4 text-primary flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium text-foreground truncate">{cto.name}</p>
+                        <p className="text-[11px] text-muted-foreground font-mono">
+                          {cto.id} · {cto.clients.length}/{cto.totalPorts} portas
+                          {losCount > 0 && <span className="text-destructive ml-1">· {losCount} LOS</span>}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {searchQuery.trim().length >= 2 && searchResults.length === 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-md shadow-lg z-50 px-3 py-2">
+                <p className="text-xs text-muted-foreground">Nenhuma CTO encontrada</p>
+              </div>
+            )}
           </div>
         )}
       </SidebarHeader>
