@@ -47,7 +47,7 @@ export function AppSidebar() {
           </div>
           {!collapsed && (
             <span className="text-sm font-semibold tracking-tight text-foreground">
-              Tech-Fiber
+              Z3 Tech Fiber
             </span>
           )}
         </div>

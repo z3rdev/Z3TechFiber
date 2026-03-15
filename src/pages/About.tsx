@@ -8,7 +8,7 @@ const About = () => {
       </div>
       <div>
         <h1 className="text-2xl font-bold text-foreground">
-          Tech-<span className="text-primary">Fiber</span>
+          Z3 Tech <span className="text-primary">Fiber</span>
         </h1>
         <p className="text-sm text-muted-foreground mt-2">
           Gestão de CTOs e manutenção de fibra óptica
