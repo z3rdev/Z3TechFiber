@@ -71,14 +71,13 @@ const userIcon = L.divIcon({
 function LocationFinder({ onLocationFound, follow }: { onLocationFound: (lat: number, lng: number) => void; follow?: boolean }) {
   const map = useMap();
   const watchRef = useRef<number | null>(null);
+  const prevPos = useRef<[number, number] | null>(null);
 
   useEffect(() => {
-    // Initial locate
     map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true });
     map.on("locationfound", (e) => onLocationFound(e.latlng.lat, e.latlng.lng));
     map.on("locationerror", () => map.setView([-23.5505, -46.6333], 15));
 
-    // Continuous watch
     if (navigator.geolocation) {
       watchRef.current = navigator.geolocation.watchPosition(
         (pos) => {
@@ -94,15 +93,58 @@ function LocationFinder({ onLocationFound, follow }: { onLocationFound: (lat: nu
     };
   }, [map, onLocationFound]);
 
-  // Follow user when navigating
+  // Follow user when navigating + zoom closer
   useEffect(() => {
     if (!follow) return;
+    // Zoom in for navigation mode
+    map.setZoom(18, { animate: true });
     const handler = (e: L.LocationEvent) => {
       map.panTo(e.latlng, { animate: true, duration: 0.5 });
     };
     map.on("locationfound", handler);
     return () => { map.off("locationfound", handler); };
   }, [map, follow]);
+
+  return null;
+}
+
+// Applies 3D perspective tilt to the map when navigating (like Google Maps)
+function NavigationTilt({ active }: { active: boolean }) {
+  const map = useMap();
+
+  useEffect(() => {
+    const container = map.getContainer();
+    const wrapper = container.parentElement;
+    if (!wrapper) return;
+
+    if (active) {
+      wrapper.style.perspective = "1200px";
+      wrapper.style.perspectiveOrigin = "50% 100%";
+      container.style.transition = "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
+      container.style.transformOrigin = "50% 100%";
+      container.style.transform = "rotateX(35deg) scale(1.15)";
+      // Disable scroll interactions that fight with the tilt
+    } else {
+      container.style.transition = "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)";
+      container.style.transform = "rotateX(0deg) scale(1)";
+      setTimeout(() => {
+        wrapper.style.perspective = "";
+        wrapper.style.perspectiveOrigin = "";
+        container.style.transformOrigin = "";
+        container.style.transition = "";
+      }, 600);
+    }
+
+    return () => {
+      container.style.transform = "";
+      container.style.transition = "";
+      container.style.transformOrigin = "";
+      if (wrapper) {
+        wrapper.style.perspective = "";
+        wrapper.style.perspectiveOrigin = "";
+      }
+    };
+  }, [map, active]);
 
   return null;
 }
@@ -193,6 +235,7 @@ const MapView = () => {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
         <LocationFinder onLocationFound={handleLocationFound} follow={!!routeTarget} />
+        <NavigationTilt active={!!routeTarget} />
         {flyTarget && <FlyTo lat={flyTarget.lat} lng={flyTarget.lng} />}
         {userLocation && <Marker position={userLocation} icon={userIcon} />}
 
