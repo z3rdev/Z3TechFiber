@@ -131,9 +131,10 @@ const MapView = () => {
         {/* Routing */}
         {routeTarget && userLocation && (
           <RoutingControl
-            from={userLocation}
-            to={[routeTarget.lat, routeTarget.lng]}
-            onClear={handleClearRoute}
+            fromLat={userLocation[0]}
+            fromLng={userLocation[1]}
+            toLat={routeTarget.lat}
+            toLng={routeTarget.lng}
             onRouteFound={setRouteInfo}
           />
         )}
@@ -175,7 +176,11 @@ const MapView = () => {
               <div className="flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-primary flex-shrink-0" />
                 <span className="text-xs font-mono text-foreground">
-                  {routeInfo.durationMin < 1 ? "<1" : routeInfo.durationMin} min
+                  {routeInfo.durationMin >= 60
+                    ? `${Math.floor(routeInfo.durationMin / 60)}h ${routeInfo.durationMin % 60}min`
+                    : routeInfo.durationMin < 1
+                      ? "<1 min"
+                      : `${routeInfo.durationMin} min`}
                 </span>
               </div>
             </div>

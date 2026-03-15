@@ -10,25 +10,29 @@ export interface RouteInfo {
 }
 
 interface RoutingControlProps {
-  from: [number, number];
-  to: [number, number];
-  onClear: () => void;
+  fromLat: number;
+  fromLng: number;
+  toLat: number;
+  toLng: number;
   onRouteFound?: (info: RouteInfo) => void;
 }
 
-export function RoutingControl({ from, to, onClear, onRouteFound }: RoutingControlProps) {
+export function RoutingControl({ fromLat, fromLng, toLat, toLng, onRouteFound }: RoutingControlProps) {
   const map = useMap();
   const routingRef = useRef<L.Routing.Control | null>(null);
+  const onRouteFoundRef = useRef(onRouteFound);
+  onRouteFoundRef.current = onRouteFound;
 
   useEffect(() => {
-    if (!map || !from || !to) return;
+    if (!map) return;
 
     if (routingRef.current) {
       map.removeControl(routingRef.current);
+      routingRef.current = null;
     }
 
     const control = L.Routing.control({
-      waypoints: [L.latLng(from[0], from[1]), L.latLng(to[0], to[1])],
+      waypoints: [L.latLng(fromLat, fromLng), L.latLng(toLat, toLng)],
       routeWhileDragging: false,
       addWaypoints: false,
       fitSelectedRoutes: true,
@@ -45,11 +49,10 @@ export function RoutingControl({ from, to, onClear, onRouteFound }: RoutingContr
 
     control.on("routesfound", (e: any) => {
       const route = e.routes?.[0];
-      if (route && onRouteFound) {
+      if (route && onRouteFoundRef.current) {
         const distanceKm = Math.round((route.summary.totalDistance / 1000) * 10) / 10;
         const durationMin = Math.round(route.summary.totalTime / 60);
 
-        // Get the first meaningful street name from instructions
         let streetName = "";
         if (route.instructions && route.instructions.length > 0) {
           for (const inst of route.instructions) {
@@ -60,7 +63,7 @@ export function RoutingControl({ from, to, onClear, onRouteFound }: RoutingContr
           }
         }
 
-        onRouteFound({ distanceKm, durationMin, streetName });
+        onRouteFoundRef.current({ distanceKm, durationMin, streetName });
       }
     });
 
@@ -78,7 +81,7 @@ export function RoutingControl({ from, to, onClear, onRouteFound }: RoutingContr
         routingRef.current = null;
       }
     };
-  }, [map, from, to]);
+  }, [map, fromLat, fromLng, toLat, toLng]);
 
   return null;
 }
