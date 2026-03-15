@@ -1,14 +1,25 @@
-import { useEffect, useState, useCallback } from "react";
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { MapContainer, TileLayer, Marker, Circle, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { mockCTOs, type CTO } from "@/data/mock-data";
 import { CTODrawer } from "@/components/CTODrawer";
 import { RoutingControl, type RouteInfo } from "@/components/RoutingControl";
 import { useCTOSearch } from "@/contexts/CTOSearchContext";
+import { useSettings } from "@/contexts/SettingsContext";
 import { Button } from "@/components/ui/button";
 import { X, MapPin, Clock, Route } from "lucide-react";
 import { toast } from "sonner";
+
+function getDistanceMeters(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371000;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
