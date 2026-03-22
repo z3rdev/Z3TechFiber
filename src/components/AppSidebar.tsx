@@ -1,6 +1,6 @@
 import {
   Wifi, Map, LayoutDashboard, BarChart3, Settings, Info,
-  Wrench, LogOut, Search, Hexagon
+  Wrench, LogOut, Search, Hexagon, Zap
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
