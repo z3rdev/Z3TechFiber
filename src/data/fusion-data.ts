@@ -56,6 +56,7 @@ export interface FusionRecord {
   photos: FusionPhoto[];
   notes: string;
   isNewBox: boolean;
+  destination?: FusionDestination; // general route destination
 }
 
 export const CABLE_TYPES = [
