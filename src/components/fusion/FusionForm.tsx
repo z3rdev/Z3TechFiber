@@ -10,11 +10,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { FiberRow } from "./FiberRow";
 import { PhotoUploader } from "./PhotoUploader";
 import { FusionDiagram } from "./FusionDiagram";
+import { DestinationSelector } from "./DestinationSelector";
 import { useFusion } from "@/contexts/FusionContext";
 import { mockCTOs } from "@/data/mock-data";
-import { CABLE_TYPES, getDefaultFibersForCount, type FiberFusion, type FusionPhoto } from "@/data/fusion-data";
+import { CABLE_TYPES, getDefaultFibersForCount, type FiberFusion, type FusionPhoto, type FusionDestination } from "@/data/fusion-data";
 import { toast } from "sonner";
-import { Zap, Save, Eye } from "lucide-react";
+import { Zap, Save, Eye, Route } from "lucide-react";
 
 export function FusionForm() {
   const [searchParams] = useSearchParams();
@@ -32,6 +33,7 @@ export function FusionForm() {
   const [photos, setPhotos] = useState<FusionPhoto[]>([]);
   const [notes, setNotes] = useState("");
   const [showPreview, setShowPreview] = useState(false);
+  const [destination, setDestination] = useState<FusionDestination | undefined>();
 
   const handleFiberCountChange = (count: number) => {
     setFiberCount(count);
@@ -66,6 +68,7 @@ export function FusionForm() {
       photos,
       notes,
       isNewBox,
+      destination,
     };
 
     addRecord(record);
@@ -144,6 +147,19 @@ export function FusionForm() {
               </SelectContent>
             </Select>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Route / Destination */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm flex items-center gap-1.5">
+            <Route className="w-4 h-4 text-primary" />
+            Sentido / Destino da Fibra
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <DestinationSelector value={destination} onChange={setDestination} label="Para onde vai a fibra?" />
         </CardContent>
       </Card>
 

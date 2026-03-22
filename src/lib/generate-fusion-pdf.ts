@@ -1,7 +1,19 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { getFiberColor, type FusionRecord } from "@/data/fusion-data";
+import { getFiberColor, type FusionRecord, type FusionDestination } from "@/data/fusion-data";
 import { format } from "date-fns";
+
+function getDestLabel(dest?: FusionDestination): string {
+  if (!dest) return "";
+  if (dest.type === "cto") return dest.ctoName ? `${dest.ctoId} — ${dest.ctoName}` : dest.ctoId || "CTO";
+  if (dest.type === "reference") return dest.label || "Referência";
+  if (dest.type === "location") {
+    if (dest.label) return dest.label;
+    if (dest.lat && dest.lng) return `${dest.lat.toFixed(5)}, ${dest.lng.toFixed(5)}`;
+    return "Localização";
+  }
+  return "";
+}
 
 const PRIMARY: [number, number, number] = [5, 150, 105];
 const DARK: [number, number, number] = [20, 27, 38];
