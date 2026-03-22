@@ -2,10 +2,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useFusion } from "@/contexts/FusionContext";
 import { FusionDiagram } from "./FusionDiagram";
 import { getFiberColor } from "@/data/fusion-data";
+import { getDestinationDisplayName } from "./DestinationSelector";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Download, Zap, User, Calendar, Cable, FileText, Loader2 } from "lucide-react";
+import { ArrowLeft, Download, Zap, User, Calendar, Cable, FileText, Loader2, MapPin, Route } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { generateFusionPDF } from "@/lib/generate-fusion-pdf";
@@ -53,6 +54,8 @@ export function FusionReport() {
         ).toFixed(3)
       : null;
 
+  const destinationLabel = getDestinationDisplayName(record.destination);
+
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
       {/* Nav */}
@@ -79,6 +82,34 @@ export function FusionReport() {
           {record.isNewBox ? "Caixa Nova" : record.ctoId}
         </Badge>
       </div>
+
+      {/* Route info */}
+      {record.destination && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <Route className="w-5 h-5 text-primary flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Rota da Fibra</p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-sm font-medium text-foreground">{record.ctoName}</span>
+                  <span className="text-muted-foreground">→</span>
+                  <span className="text-sm font-medium text-foreground truncate">{destinationLabel}</span>
+                </div>
+                {record.destination.lat && record.destination.lng && (
+                  <p className="text-[10px] text-muted-foreground font-mono mt-0.5 flex items-center gap-1">
+                    <MapPin className="w-2.5 h-2.5" />
+                    {record.destination.lat.toFixed(6)}, {record.destination.lng.toFixed(6)}
+                  </p>
+                )}
+              </div>
+              <Badge variant="outline" className="text-[9px] capitalize">
+                {record.destination.type === "cto" ? "CTO" : record.destination.type === "reference" ? "Referência" : "GPS"}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Info grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -162,7 +193,11 @@ export function FusionReport() {
                           {origin.name}
                         </div>
                       </td>
-                      <td className="py-2 px-2 text-center font-mono">{fiber.direction}</td>
+                      <td className="py-2 px-2 text-center font-mono">
+                        {fiber.destinationOverride
+                          ? getDestinationDisplayName(fiber.destinationOverride)
+                          : fiber.direction}
+                      </td>
                       <td className="py-2 px-2">
                         <div className="flex items-center gap-1.5">
                           <span className="w-3 h-3 rounded-full border border-border" style={{ backgroundColor: dest.hex }} />

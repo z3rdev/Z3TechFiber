@@ -1,7 +1,19 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { getFiberColor, type FusionRecord } from "@/data/fusion-data";
+import { getFiberColor, type FusionRecord, type FusionDestination } from "@/data/fusion-data";
 import { format } from "date-fns";
+
+function getDestLabel(dest?: FusionDestination): string {
+  if (!dest) return "";
+  if (dest.type === "cto") return dest.ctoName ? `${dest.ctoId} — ${dest.ctoName}` : dest.ctoId || "CTO";
+  if (dest.type === "reference") return dest.label || "Referência";
+  if (dest.type === "location") {
+    if (dest.label) return dest.label;
+    if (dest.lat && dest.lng) return `${dest.lat.toFixed(5)}, ${dest.lng.toFixed(5)}`;
+    return "Localização";
+  }
+  return "";
+}
 
 const PRIMARY: [number, number, number] = [5, 150, 105];
 const DARK: [number, number, number] = [20, 27, 38];
@@ -91,6 +103,45 @@ export async function generateFusionPDF(record: FusionRecord) {
   });
 
   y += 26;
+
+  // ── Route / Destination ──
+  if (record.destination) {
+    const destLabel = getDestLabel(record.destination);
+    const destType = record.destination.type === "cto" ? "CTO" : record.destination.type === "reference" ? "REFERÊNCIA" : "GPS";
+
+    doc.setFillColor(240, 253, 244);
+    doc.roundedRect(margin, y, contentW, 14, 2, 2, "F");
+    doc.setFillColor(...PRIMARY);
+    doc.rect(margin, y, 1.5, 14, "F");
+
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...MID_GRAY);
+    doc.text("ROTA DA FIBRA", margin + 6, y + 5);
+
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...DARK);
+    doc.text(`${record.ctoName}  →  ${destLabel}`, margin + 6, y + 11);
+
+    doc.setFillColor(...PRIMARY);
+    doc.roundedRect(pageW - margin - 22, y + 3, 20, 7, 1.5, 1.5, "F");
+    doc.setFontSize(6);
+    doc.setTextColor(...WHITE);
+    doc.text(destType, pageW - margin - 12, y + 7.5, { align: "center" });
+
+    if (record.destination.lat && record.destination.lng) {
+      doc.setFontSize(6.5);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(...MID_GRAY);
+      doc.text(
+        `${record.destination.lat.toFixed(6)}, ${record.destination.lng.toFixed(6)}`,
+        pageW - margin - 24, y + 7.5, { align: "right" }
+      );
+    }
+
+    y += 20;
+  }
 
   // ── Fusion diagram ──
   doc.setFontSize(11);
