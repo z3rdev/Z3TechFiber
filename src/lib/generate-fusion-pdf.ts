@@ -104,6 +104,45 @@ export async function generateFusionPDF(record: FusionRecord) {
 
   y += 26;
 
+  // ── Route / Destination ──
+  if (record.destination) {
+    const destLabel = getDestLabel(record.destination);
+    const destType = record.destination.type === "cto" ? "CTO" : record.destination.type === "reference" ? "REFERÊNCIA" : "GPS";
+
+    doc.setFillColor(240, 253, 244);
+    doc.roundedRect(margin, y, contentW, 14, 2, 2, "F");
+    doc.setFillColor(...PRIMARY);
+    doc.rect(margin, y, 1.5, 14, "F");
+
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...MID_GRAY);
+    doc.text("ROTA DA FIBRA", margin + 6, y + 5);
+
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...DARK);
+    doc.text(`${record.ctoName}  →  ${destLabel}`, margin + 6, y + 11);
+
+    doc.setFillColor(...PRIMARY);
+    doc.roundedRect(pageW - margin - 22, y + 3, 20, 7, 1.5, 1.5, "F");
+    doc.setFontSize(6);
+    doc.setTextColor(...WHITE);
+    doc.text(destType, pageW - margin - 12, y + 7.5, { align: "center" });
+
+    if (record.destination.lat && record.destination.lng) {
+      doc.setFontSize(6.5);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(...MID_GRAY);
+      doc.text(
+        `${record.destination.lat.toFixed(6)}, ${record.destination.lng.toFixed(6)}`,
+        pageW - margin - 24, y + 7.5, { align: "right" }
+      );
+    }
+
+    y += 20;
+  }
+
   // ── Fusion diagram ──
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
