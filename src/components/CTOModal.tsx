@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { PortGrid } from "@/components/PortGrid";
 import { StatusLed } from "@/components/StatusLed";
 import type { CTO } from "@/data/mock-data";
-import { Hexagon, Navigation } from "lucide-react";
+import { Hexagon, Navigation, Zap } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface CTOModalProps {
   cto: CTO | null;
@@ -16,12 +17,19 @@ interface CTOModalProps {
 }
 
 export function CTOModal({ cto, open, onOpenChange, onUpdate, onNavigate, hasUserLocation }: CTOModalProps) {
+  const navigate = useNavigate();
+
   if (!cto) return null;
 
   const activePorts = cto.clients.length;
   const freePorts = cto.totalPorts - activePorts;
   const losCount = cto.clients.filter((c) => c.status === "los").length;
   const onlineCount = cto.clients.filter((c) => c.status === "online").length;
+
+  const handleFusion = () => {
+    onOpenChange(false);
+    navigate(`/fusion/new?cto=${cto.id}`);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -35,15 +43,26 @@ export function CTOModal({ cto, open, onOpenChange, onUpdate, onNavigate, hasUse
               <DialogTitle className="text-foreground">{cto.id}</DialogTitle>
               <DialogDescription className="text-muted-foreground">{cto.name}</DialogDescription>
             </div>
-            <Button
-              size="sm"
-              onClick={() => onNavigate?.(cto)}
-              disabled={!hasUserLocation}
-              className="gap-1.5"
-            >
-              <Navigation className="w-4 h-4" />
-              Ir até
-            </Button>
+            <div className="flex gap-1.5">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleFusion}
+                className="gap-1.5"
+              >
+                <Zap className="w-4 h-4" />
+                Fusion
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => onNavigate?.(cto)}
+                disabled={!hasUserLocation}
+                className="gap-1.5"
+              >
+                <Navigation className="w-4 h-4" />
+                Ir até
+              </Button>
+            </div>
           </div>
 
           <div className="flex items-center gap-3 mt-3 flex-wrap">

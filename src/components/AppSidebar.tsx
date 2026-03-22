@@ -24,6 +24,7 @@ const mainItems = [
   { title: "Mapa", url: "/", icon: Map },
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Métricas", url: "/metrics", icon: BarChart3 },
+  { title: "Fusion", url: "/fusion", icon: Zap },
 ];
 
 const systemItems = [
