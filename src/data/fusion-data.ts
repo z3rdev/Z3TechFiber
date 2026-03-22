@@ -16,12 +16,24 @@ export const FIBER_COLORS = [
 export type FiberColorId = (typeof FIBER_COLORS)[number]["id"];
 export type FusionDirection = "A→B" | "B→A";
 
+export type DestinationType = "cto" | "reference" | "location";
+
+export interface FusionDestination {
+  type: DestinationType;
+  ctoId?: string;
+  ctoName?: string;
+  label?: string;
+  lat?: number;
+  lng?: number;
+}
+
 export interface FiberFusion {
   fiberIndex: number;
   originColor: FiberColorId;
   destinationColor: FiberColorId;
   direction: FusionDirection;
   spliceAttenuation?: number; // dB
+  destinationOverride?: FusionDestination; // per-fiber override
   notes?: string;
 }
 
