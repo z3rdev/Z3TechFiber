@@ -3,11 +3,11 @@ import autoTable from "jspdf-autotable";
 import { getFiberColor, type FusionRecord } from "@/data/fusion-data";
 import { format } from "date-fns";
 
-const PRIMARY = [5, 150, 105]; // #059669
-const DARK = [20, 27, 38];
-const MID_GRAY = [120, 130, 145];
-const LIGHT_BG = [245, 247, 250];
-const WHITE = [255, 255, 255];
+const PRIMARY: [number, number, number] = [5, 150, 105];
+const DARK: [number, number, number] = [20, 27, 38];
+const MID_GRAY: [number, number, number] = [120, 130, 145];
+const LIGHT_BG: [number, number, number] = [245, 247, 250];
+const WHITE: [number, number, number] = [255, 255, 255];
 
 function hexToRgb(hex: string): [number, number, number] {
   const r = parseInt(hex.slice(1, 3), 16);
