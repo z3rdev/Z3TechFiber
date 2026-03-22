@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { FusionProvider } from "@/contexts/FusionContext";
 import { AppLayout } from "@/components/AppLayout";
 import Login from "@/pages/Login";
 import MapView from "@/pages/MapView";
@@ -12,6 +13,7 @@ import Metrics from "@/pages/Metrics";
 import Settings from "@/pages/Settings";
 import Tools from "@/pages/Tools";
 import About from "@/pages/About";
+import Fusion from "@/pages/Fusion";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +40,7 @@ const AppRoutes = () => (
       <Route path="settings" element={<Settings />} />
       <Route path="tools" element={<Tools />} />
       <Route path="about" element={<About />} />
+      <Route path="fusion/*" element={<Fusion />} />
     </Route>
     <Route path="*" element={<NotFound />} />
   </Routes>
@@ -49,9 +52,11 @@ const App = () => (
       <Toaster />
       <Sonner />
       <AuthProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
+        <FusionProvider>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </FusionProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
